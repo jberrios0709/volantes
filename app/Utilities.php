@@ -1,0 +1,34 @@
+<?php
+
+namespace App;
+
+use Illuminate\Database\Eloquent\Model;
+use App\Price; 
+use App\Measure; 
+
+class Utilities extends Model
+{
+    //
+    public static function calculateSpace($flyers, $measure){
+        return ($flyers/5000)*($measure/150);
+    }
+
+    public static function calculatePriceFlyer($measure, $timeDelivered, $quantityFlyers,$garnet){
+        $time = $timeDelivered/7;
+        $measureP = Measure::find($measure);
+        if(($time == 1 || $time == 3) && $measureP != null){ 
+            $prices = Price::where('garnet','=',$garnet)->where('measure_id','=',$measure)->where('time','=',$time)->orderBy('id','desc')->first();
+            switch ($quantityFlyers) {
+                case 5000:
+                    return $priceFlyers = $prices->price1;
+                case 10000:
+                    return $priceFlyers = $prices->price2;
+                case 15000:
+                    return $priceFlyers = $prices->price3;
+                case 20000:
+                    return $priceFlyers = $prices->price4;
+            }
+        }
+        return false;
+    }
+}

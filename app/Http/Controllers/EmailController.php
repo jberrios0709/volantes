@@ -1,0 +1,65 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Http\Requests;
+use App\Client;
+use App\Email;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Validator;
+
+class EmailController extends Controller
+{
+    //
+    public function store($client, Request $request){
+        $rules = array(
+			'email'=> 'required'
+        );
+        $validate = Validator::make($request->all(), $rules);
+        if ($validate->fails()) {
+			return response()->json(['status'=>'Unprocessable Entity', 'errors'=>$validate->errors()], 422);
+		}else{
+            $client=Client::find($client);
+            $email=New Email($request->all());
+			try {
+				$save = $client->emails()->save($email);
+				return response()->json(["status"=> "ok.", "data"=> $save ],200);
+			} catch (Exception $e) {
+				return response()->json(['status'=>'Unprocessable Entity', 'errors'=>$e->errorInfo], 400);
+			}
+		}
+    }
+
+    public function update($client, $email, Request $request){
+        $rules = array(
+			'email'=> 'required'
+        );
+        $validate = Validator::make($request->all(), $rules);
+        if ($validate->fails()) {
+			return response()->json(['status'=>'Unprocessable Entity', 'errors'=>$validate->errors()], 422);
+		}elseif(!Client::find($client) || Email::where('client_id', '=', $client)->where('id', '=', $email)->get()->isEmpty()){
+            return response()->json(["status"=> "Not Found" ],404);
+        }else{
+			try {
+                Email::where('client_id', '=', $client)->where('id', '=', $email)->update($request->all());
+				return response()->json(["status"=> "ok." ],200);
+			} catch (Exception $e) {
+				return response()->json(['status'=>'Unprocessable Entity', 'errors'=>$e->errorInfo], 400);
+			}
+		}
+    }
+
+    public function destroy($client, $email){
+       if(!Client::find($client) || Email::where('client_id', '=', $client)->where('id', '=', $email)->get()->isEmpty()){
+            return response()->json(["status"=> "Not Found" ],404);
+        }else{
+			try {
+                Email::where('client_id', '=', $client)->where('id', '=', $email)->delete();
+				return response()->json(["status"=> "ok." ],200);
+			} catch (Exception $e) {
+				return response()->json(['status'=>'Unprocessable Entity', 'errors'=>$e->errorInfo], 400);
+			}
+		}
+    }
+}
