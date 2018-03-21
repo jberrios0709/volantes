@@ -9,5 +9,5 @@ class Abono extends Model
     //
     protected $table="abonos";
     protected $fillable = array("mount");
-    protected $hidden= ['created_at','updated_at'];
+    protected $hidden= ['updated_at'];
 }

@@ -73,12 +73,17 @@ class OrderController extends Controller
             case 3:
                 return response()->json(['status'=>'Ok.', 'data'=>Order::indexCustom(3)], 200);
             case 5:
-                return response()->json(['status'=>'Ok.', 'data'=>Utilities::orderArray(Order::indexCustom(5))], 200);
+                return response()->json(['status'=>'Ok.', 'data'=>Utilities::orderArray(Order::indexCustom(5),"delivery")], 200);
+            case 7:
+                return response()->json(['status'=>'Ok.', 'data'=>Order::indexCustom(7)], 200);
+            case "date":
+    
+                return response()->json(['status'=>'Ok.', 'data'=>Utilities::orderArray(Order::inForDate($_GET['desde'],$_GET['hasta']),"sell")], 200);
             default:
 		        return response()->json(['status'=>'Ok.', 'data'=>"error"], 422);
         }
     }
-
+    
     public function design($order,Request $request){
         $user = JWTAuth::parseToken()->authenticate();
         if($user->type === 1 || $user->type === 2){

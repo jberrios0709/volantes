@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Utilities;
 use App\Measure;
 use App\Branch;
+use App\Abono;
 
 class Order extends Model
 {
@@ -177,7 +178,7 @@ class Order extends Model
                 if($or[count($or)-1]->status === $option){
                     $order->branch->client;
                     $order->status_design;
-                    if($option === 5){
+                    if($option === 5 || $option === 7){
                         $order->abonos;
                     }
                     array_push($tmp,$order);
@@ -186,5 +187,22 @@ class Order extends Model
 		};
 		return $tmp;
     }    
+
+    public static function inForDate($desde, $hasta){
+        $orders = [];
+        foreach(Order::whereBetWeen('created_at',[$desde,$hasta])->get() as $order){
+            $order->branch->client;
+            $order->date_sell = $order->created_at;
+            array_push($orders, $order);
+        }
+        foreach(Abono::whereBetWeen('created_at',[$desde,$hasta])->get() as $abono){
+            $order = Order::find($abono->order_id);
+            $order->branch->client;
+            $order->abono = $abono;
+            $order->date_sell = $abono->created_at;
+            array_push($orders, $order);
+        }
+        return $orders;
+    }
 
 }

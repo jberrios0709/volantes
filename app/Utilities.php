@@ -9,15 +9,25 @@ use App\Measure;
 class Utilities extends Model
 {
     //
-    public static function orderArray($array){
-        usort($array, "self::retorna");
+    public static function orderArray($array,$option){
+        if($option == "delivery"){
+            usort($array, "self::delivery");
         return $array;
+            
+        }else if($option == "sell"){
+            usort($array, "self::sell");
+        return $array;
+            
+        }
     }
 
-    public static function retorna( $a, $b ) {
+    public static function delivery( $a, $b ) {
         return strtotime($a['date_delivery']) - strtotime($b['date_delivery']);
     }
 
+    public static function sell( $a, $b ) {
+        return strtotime($a['date_sell']) - strtotime($b['date_sell']);
+    }
 
     public static function calculateSpace($flyers, $measure){
         return ($flyers/5000)*($measure/150);
