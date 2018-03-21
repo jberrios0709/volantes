@@ -26,12 +26,12 @@ class Order extends Model
                                 'mention', 
                                 'specification', 
                                 'we_send', 
+                                'description_send',
                                 'price_flyer', 
                                 'price_flyer_special',
                                 'price_design', 
                                 'price_send', 
                                 'trace',
-                                'method_payment_trace',
                                 'debit',
                                 'method_payment', 
                                 'branch_id'
@@ -46,33 +46,100 @@ class Order extends Model
         return $this->hasMany('App\StatusOrder');
     }
 
+    public function abonos(){
+        return $this->hasMany('App\Abono');
+    }
+
     public function status_design(){
         return $this->hasOne('App\StatusDesign');
     }
 
+    public function orders_folio(){
+        return $this->hasMany('App\OrderFolio');
+	}
+
     public function rulesBussines(){
         $this->rulesSpecial();
         $this->calculatePriceBase();
-        $this->searchMeasure();
-        $this->calculateSpace($this->convertMeasure());
+        $this->calculateDebit();
+        $this->asingMeasure();
+        $this->calculateSpace();
     }
 
     private function rulesSpecial(){
+        $size=Measure::find($this->size);
+        if($size == null){
+            $this->size_special=true;
+        }
         if($this->size_special){
             $this->price_flyer_special=true;
         }
     }
 
+    public function rulesPrint(){
+        $status = $this->status_order;
+        if($status[count($status)-1]->status === 3 && $this->comprobateSpacesMissingPrint() > 0){
+            return true;
+        }
+        return false;
+    }
+
+    public function comprobateSpacesMissingPrint(){
+        $orderPrint = $this->orders_folio;
+        $spacesInMissing = $this->spaces;
+        foreach($orderPrint as $print){
+            $spacesInMissing -= $print->spaces; 
+        }
+        return $spacesInMissing;
+    }
+
+    public function quantityPrintReady(){
+        $spacesReady = 0;
+        foreach($this->orders_folio as $print){
+            if($print->folio->ready){
+                $spacesReady += $print->spaces;
+            }
+        }
+        return $spacesReady;
+    }
+
+    public function addDateDelivery(){
+        if(!$this->special_time){
+            $date = date('Y-m-j');
+            $dateDelivery = strtotime('+'.$this->time_delivery.' day' , strtotime( $date ));
+            $dateDelivery = date('Y-m-j', $dateDelivery);
+            $this->date_delivery = $dateDelivery;
+            $this->save();
+        }
+    }
+
+    public function finishOrDebit(){
+        $debit = $this->price_flyer + $this->price_send + $this->price_design - $this->trace;
+        foreach($this->abonos as $a){
+            $debit -= $a->mount;
+        }
+        if($debit > 0){
+            return "debit";
+        }else{
+            return "finish";
+        }
+    }
+
+
     private function calculateSpace(){
-        $this->spaces=Utilities::calculateSpace($this->quantity,$this->size);
+        $this->spaces=Utilities::calculateSpace($this->quantity,$this->convertMeasure());
     }
 
     private function calculatePriceBase(){
         if(!$this->size_special && !$this->price_flyer_special){
-            $this->price_flyer=Utilities::calculatePriceFlyer($this->size,$this->time_delivery,$this->quantity);
+            $this->price_flyer=Utilities::calculatePriceFlyer($this->size,$this->time_delivery,$this->quantity,$this->garnet);
         }else{
             $this->price_flyer_special=true;
         };
+    }
+
+    private function calculateDebit(){
+        $this->debit = $this->price_flyer + $this->price_design + $this->price_send - $this->trace; 
     }
 
     private function convertMeasure(){
@@ -80,13 +147,13 @@ class Order extends Model
         return $values[0] * $values[1];
     }
 
-    private function searchMeasure(){
-        if(!$this->size_special){
-            $size=Measure::find($this->size);
-            $this->size=$size->measure;
+    private function asingMeasure(){
+        $size=Measure::find($this->size);
+        if($size != null){
+            $this->size = $size->measure;
         }else{
             $this->size_special=true;
-        };
+        }
     }
 
     public static function indexAdmin($branch){
@@ -110,6 +177,9 @@ class Order extends Model
                 if($or[count($or)-1]->status === $option){
                     $order->branch->client;
                     $order->status_design;
+                    if($option === 5){
+                        $order->abonos;
+                    }
                     array_push($tmp,$order);
                 }
             }

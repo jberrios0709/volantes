@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Order;
+use App\Utilities;
 use App\Branch;
 use App\StatusOrder;
 use App\StatusDesign;
@@ -24,7 +25,8 @@ class OrderController extends Controller
             'design' => 'required',  
             'mention' => 'required', 
             'price_flyer' => 'required',
-            'sides'=> 'required'
+            'sides'=> 'required',
+            'description_send'=>'required'
         );
         $validate = Validator::make($request->all(), $rules);
         if ($validate->fails()) {
@@ -70,6 +72,8 @@ class OrderController extends Controller
                 return response()->json(['status'=>'Ok.', 'data'=>Order::indexCustom(2)], 200);
             case 3:
                 return response()->json(['status'=>'Ok.', 'data'=>Order::indexCustom(3)], 200);
+            case 5:
+                return response()->json(['status'=>'Ok.', 'data'=>Utilities::orderArray(Order::indexCustom(5))], 200);
             default:
 		        return response()->json(['status'=>'Ok.', 'data'=>"error"], 422);
         }
@@ -88,6 +92,7 @@ class OrderController extends Controller
                     $print->order_id = $ord->id;
                     $print->user_id = $user->id;
                     $print->save();
+                    $ord->addDateDelivery();
                     return response()->json(['status'=>'Ok.', 'statusOrder'=>3], 200);
                 }else{
                     return response()->json(['status'=>'Ok.', 'data'=>$ord->status_design, 'statusOrder'=>2], 200);

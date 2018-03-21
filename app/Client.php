@@ -13,7 +13,7 @@ class Client extends Model
     //
     protected $table="clients";
     protected $fillable = array('name', 'name_contact','charge', 'reference', 'observations', 'comments');
-    protected $hidden= ['created_at','updated_at'];
+    protected $hidden= ['updated_at'];
     
     public function userCreate(){
         return $this->belongsTo('App\User');
@@ -32,18 +32,11 @@ class Client extends Model
     }
 
     public function infoComplete(){
-        return [
-            "id"=>$this->id,
-            "name"=>$this->name,
-            "name_contact"=>$this->name_contact,
-            "charge"=>$this->charge,
-            "reference"=>$this->reference,
-            "observations"=>$this->observations,
-            "comments"=>$this->comments,
-            "phones"=>$this->phones,
-            "mails"=>$this->emails,
-            "branch"=>$this->branchs
-            ];
+        $this->phones;
+        $this->emails;
+        $this->branchs;
+        return $this;
+        
     }
 
     public function saveEmails($emails){

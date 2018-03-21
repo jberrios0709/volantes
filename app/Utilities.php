@@ -9,6 +9,16 @@ use App\Measure;
 class Utilities extends Model
 {
     //
+    public static function orderArray($array){
+        usort($array, "self::retorna");
+        return $array;
+    }
+
+    public static function retorna( $a, $b ) {
+        return strtotime($a['date_delivery']) - strtotime($b['date_delivery']);
+    }
+
+
     public static function calculateSpace($flyers, $measure){
         return ($flyers/5000)*($measure/150);
     }
@@ -30,5 +40,9 @@ class Utilities extends Model
             }
         }
         return false;
+    }
+
+    public static function test($size){
+        return Measure::find($size);
     }
 }

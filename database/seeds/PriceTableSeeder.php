@@ -25,7 +25,7 @@ class PriceTableSeeder extends Seeder
             [
                 'measure_id'=>1,
                 'garnet'=>"115gr",
-                'time'=>2,
+                'time'=>3,
                 'price1'=>'500',
                 'price2'=>'1110.50',
                 'price3'=>'1280.30',
@@ -43,7 +43,7 @@ class PriceTableSeeder extends Seeder
             [
                 'measure_id'=>2,
                 'garnet'=>"115gr",
-                'time'=>2,
+                'time'=>3,
                 'price1'=>'650',
                 'price2'=>'1080.50',
                 'price3'=>'1500.30',
@@ -61,7 +61,7 @@ class PriceTableSeeder extends Seeder
             [
                 'measure_id'=>3,
                 'garnet'=>"115gr",
-                'time'=>2,
+                'time'=>3,
                 'price1'=>'500',
                 'price2'=>'1110.50',
                 'price3'=>'1280.30',
@@ -79,7 +79,7 @@ class PriceTableSeeder extends Seeder
             [
                 'measure_id'=>4,
                 'garnet'=>"115gr",
-                'time'=>2,
+                'time'=>3,
                 'price1'=>'500',
                 'price2'=>'1110.50',
                 'price3'=>'1280.30',
@@ -97,7 +97,7 @@ class PriceTableSeeder extends Seeder
             [
                 'measure_id'=>1,
                 'garnet'=>"150gr",
-                'time'=>2,
+                'time'=>3,
                 'price1'=>'600',
                 'price2'=>'1310.50',
                 'price3'=>'1480.30',
@@ -115,7 +115,7 @@ class PriceTableSeeder extends Seeder
             [
                 'measure_id'=>2,
                 'garnet'=>"150gr",
-                'time'=>2,
+                'time'=>3,
                 'price1'=>'750',
                 'price2'=>'1280.50',
                 'price3'=>'1700.30',
@@ -133,7 +133,7 @@ class PriceTableSeeder extends Seeder
             [
                 'measure_id'=>3,
                 'garnet'=>"150gr",
-                'time'=>2,
+                'time'=>3,
                 'price1'=>'550',
                 'price2'=>'1610.50',
                 'price3'=>'1780.30',
@@ -151,7 +151,7 @@ class PriceTableSeeder extends Seeder
             [
                 'measure_id'=>4,
                 'garnet'=>"150gr",
-                'time'=>2,
+                'time'=>3,
                 'price1'=>'520',
                 'price2'=>'1310.50',
                 'price3'=>'1580.30',

@@ -8,7 +8,7 @@ class Branch extends Model
 {
     //
     protected $table="branchs";
-    protected $fillable = array('name','address','client_id');
+    protected $fillable = array('name','address','phone','client_id');
     protected $hidden= ['updated_at'];
     
     public function client(){
