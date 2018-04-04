@@ -16,7 +16,8 @@ Route::group(['prefix' => 'api/1.0/','middleware' => ['cors']] , function () {
 	Route::post('refresh','ApiAuthController@userRefreshAuth');
 	Route::post('calculatePrice','UtilitiesController@calculatePriceBase');
 	Route::post('calculateSpaces','UtilitiesController@calculateSpaces');
-	Route::post('test','UtilitiesController@test');
+	Route::get('pdf/delivery/{id}','PdfController@delivery');
+	Route::get('pdf/inForDate','PdfController@inForDate');
 });
 
 
@@ -51,9 +52,15 @@ Route::group(['prefix' => 'api/1.0/','middleware' => ['cors','jwt.auth']] , func
 		['only' => ['index','store', 'update']]
 	);
 
+	Route::resource('order', 'OrderController',
+		['only' => ['show']]
+	);
+
 	Route::get('orders','OrderController@indexTwo');
 
 	Route::post('order/{id}/design','OrderController@design');
+	Route::post('order/{id}/taller','OrderController@taller');
+	Route::post('order/{id}/cancel','OrderController@cancel');
 
 	Route::resource('print', 'PrintController',
 		['only' => ['index','store', 'update']]

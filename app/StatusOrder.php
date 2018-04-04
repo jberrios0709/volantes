@@ -9,7 +9,7 @@ class StatusOrder extends Model
     //
     protected $table="status_order";
     protected $fillable = array('status','user_id','order_id');
-    protected $hidden= ['created_at','updated_at'];
+    protected $hidden= ['updated_at'];
     
     public function user(){
         return $this->belongsTo('App\User');

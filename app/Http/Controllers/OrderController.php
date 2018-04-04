@@ -15,6 +15,20 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 class OrderController extends Controller
 {
     //
+
+    
+
+    public function show($id){
+        $order = Order::find($id);
+        if($order != null){
+            $order->branch->client;
+            $order->abonos;
+            $order->status_order;
+        }
+        return response()->json(['status'=>'Ok.', 'data'=>$order], 200);
+        
+    }
+
     public function store($branch, Request $request){  
         $rules = array(
 			'product' => 'required',
@@ -23,7 +37,7 @@ class OrderController extends Controller
             'time_delivery' => 'required',  
             'garnet' => 'required', 
             'design' => 'required',  
-            'mention' => 'required', 
+            'contact_design' => 'required', 
             'price_flyer' => 'required',
             'sides'=> 'required',
             'description_send'=>'required'
@@ -53,6 +67,7 @@ class OrderController extends Controller
                 $initDesign = New StatusDesign();
                 $initDesign->order_id = $save->id;
                 $initDesign->save();
+                
 				return response()->json(["status"=> "ok.", "data"=> $save ],200);
 			} catch (Exception $e) {
 				return response()->json(['status'=>'Unprocessable Entity', 'errors'=>$e->errorInfo], 400);
@@ -69,15 +84,22 @@ class OrderController extends Controller
             case 1:
                 return response()->json(['status'=>'Ok.', 'data'=>Order::all()], 200);
             case 2:
-                return response()->json(['status'=>'Ok.', 'data'=>Order::indexCustom(2)], 200);
+                return response()->json(['status'=>'Ok.', 'data'=>Utilities::orderArray(Order::indexCustom(2),"delivery")], 200);
             case 3:
                 return response()->json(['status'=>'Ok.', 'data'=>Order::indexCustom(3)], 200);
+            case 4:
+                return response()->json(['status'=>'Ok.', 'data'=>Order::indexCustom(4)], 200);
             case 5:
                 return response()->json(['status'=>'Ok.', 'data'=>Utilities::orderArray(Order::indexCustom(5),"delivery")], 200);
             case 7:
                 return response()->json(['status'=>'Ok.', 'data'=>Order::indexCustom(7)], 200);
             case "date":
-    
+                if($_GET["init"] == "true"){
+                    $hasta = date('Y-m-j');
+                    $desde = strtotime('- 10 day' , strtotime( $hasta ));
+                    $desde = date('Y-m-j', $desde);
+                    return response()->json(['status'=>'Ok.', 'desde'=>$desde, 'hasta'=>$hasta, 'data'=>Utilities::orderArray(Order::inForDate($desde,$hasta),"sell")], 200);
+                }
                 return response()->json(['status'=>'Ok.', 'data'=>Utilities::orderArray(Order::inForDate($_GET['desde'],$_GET['hasta']),"sell")], 200);
             default:
 		        return response()->json(['status'=>'Ok.', 'data'=>"error"], 422);
@@ -106,9 +128,48 @@ class OrderController extends Controller
                 return response()->json(['status'=>'Ok.', 'data'=>"Diseño ya aprobado"], 422);
             }
         }
-        return response()->json(['status'=>'Ok.', 'data'=>"No posee los permisos"], 401);
-        
-        
+        return response()->json(['status'=>'Ok.', 'data'=>"No posee los permisos"], 401);    
+    }
+
+    public function taller($order,Request $request){
+        $user = JWTAuth::parseToken()->authenticate();
+        if($user->type === 1 || $user->type === 2){
+            $ord = Order::find($order);
+            $status =  $ord->status_order;
+            if($ord->product != "Volantes"){
+                if($status[count($status)-1]->status === 3){
+                    $taller = New StatusOrder();
+                    $taller->status = 4;
+                    $taller->order_id = $ord->id;
+                    $taller->user_id = $user->id;
+                    $taller->save();
+                }else if($status[count($status)-1]->status === 4){
+                    $print = New StatusOrder();
+                    $print->status = 5;
+                    $print->order_id = $ord->id;
+                    $print->user_id = $user->id;
+                    $print->save();
+                }
+                return response()->json(['status'=>'Ok.'], 200);
+            }else{
+                return response()->json(['status'=>'Ok.', 'data'=>"Diseño ya aprobado"], 422);
+            }
+        }
+        return response()->json(['status'=>'Ok.', 'data'=>"No posee los permisos"], 401);        
+    }
+
+    public function cancel($order,Request $request){
+        $user = JWTAuth::parseToken()->authenticate();
+        if($user->type === 1){
+            $ord = Order::find($order);
+            $cancel = New StatusOrder();
+            $cancel->status = 8;
+            $cancel->order_id = $ord->id;
+            $cancel->user_id = $user->id;
+            $cancel->save();
+            return response()->json(['status'=>'Ok.', 'data'=>$cancel], 200);
+        }
+        return response()->json(['status'=>'Ok.', 'data'=>"No posee los permisos"], 401);    
     }
 
 }

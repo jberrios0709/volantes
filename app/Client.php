@@ -12,7 +12,7 @@ class Client extends Model
 {
     //
     protected $table="clients";
-    protected $fillable = array('name', 'name_contact','charge', 'reference', 'observations', 'comments');
+    protected $fillable = array('name', 'name_contact','charge', 'address', 'reference', 'observations', 'comments');
     protected $hidden= ['updated_at'];
     
     public function userCreate(){

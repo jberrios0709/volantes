@@ -22,8 +22,7 @@ class BranchController extends Controller
 
     public function store($client, Request $request){
         $rules = array(
-			'name'=> 'required',
-			'address'=>'required'
+			'name'=> 'required'
         );
         $validate = Validator::make($request->all(), $rules);
         if ($validate->fails()) {
@@ -42,8 +41,7 @@ class BranchController extends Controller
 
     public function update($client, $branch, Request $request){
         $rules = array(
-			'name'=> 'required',
-			'address'=>'required'
+			'name'=> 'required'
         );
         $validate = Validator::make($request->all(), $rules);
         if ($validate->fails()) {

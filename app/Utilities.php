@@ -11,14 +11,17 @@ class Utilities extends Model
     //
     public static function orderArray($array,$option){
         if($option == "delivery"){
+            usort($array, "self::createDate");
             usort($array, "self::delivery");
-        return $array;
-            
+            return $array;
         }else if($option == "sell"){
             usort($array, "self::sell");
-        return $array;
-            
+            return $array;
         }
+    }
+
+    public static function createDate( $a, $b ) {
+        return strtotime($a['created_at']) - strtotime($b['created_at']);
     }
 
     public static function delivery( $a, $b ) {

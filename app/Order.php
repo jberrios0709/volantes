@@ -24,7 +24,7 @@ class Order extends Model
                                 'sides',  
                                 'garnet', 
                                 'design',  
-                                'mention', 
+                                'contact_design', 
                                 'specification', 
                                 'we_send', 
                                 'description_send',
@@ -64,7 +64,14 @@ class Order extends Model
         $this->calculatePriceBase();
         $this->calculateDebit();
         $this->asingMeasure();
+        $this->dateDeliverySpecial();
         $this->calculateSpace();
+    }
+
+    private function dateDeliverySpecial(){
+        if($this->special_time){
+            $this->date_delivery = $this->time_delivery;
+        }
     }
 
     private function rulesSpecial(){
@@ -77,9 +84,9 @@ class Order extends Model
         }
     }
 
-    public function rulesPrint(){
+    public function rulesPrint($spaces){
         $status = $this->status_order;
-        if($status[count($status)-1]->status === 3 && $this->comprobateSpacesMissingPrint() > 0){
+        if($status[count($status)-1]->status === 3 && $this->comprobateSpacesMissingPrint() > 0 && $this->comprobateSpacesMissingPrint() >= $spaces){
             return true;
         }
         return false;
@@ -161,6 +168,7 @@ class Order extends Model
         $tmp = [];
 		foreach(Branch::find($branch)->orders as $order){
             $order;
+            $order->abonos;
             foreach($order->status_order as $info){
                 $info->user;
             };
@@ -180,6 +188,8 @@ class Order extends Model
                     $order->status_design;
                     if($option === 5 || $option === 7){
                         $order->abonos;
+                    }else if($option === 3){
+                        $order->spacesInMissing = $order->comprobateSpacesMissingPrint();
                     }
                     array_push($tmp,$order);
                 }

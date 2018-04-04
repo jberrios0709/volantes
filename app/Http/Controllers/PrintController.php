@@ -19,6 +19,51 @@ class PrintController extends Controller
     public function store(Request $request){
         $user = JWTAuth::parseToken()->authenticate();
         if($user->type === 1){
+            $rules = true;
+            $total = 0;
+            foreach($request->orders as $order){
+                $ord = Order::find($order["order_id"]);
+                $total += $order["spaces"];
+                if(!$ord->rulesPrint($order["spaces"])){
+                    $rules = false;
+                }
+            }
+            if($rules && $total <= 23){
+                try{
+                    $folio= New folio();
+                    $folio->save();
+                    foreach($request->orders as $order){
+                        $OrderFolio = New OrderFolio();
+                        $OrderFolio->folio_id = $folio->id;
+                        $OrderFolio->order_id = $order["order_id"];
+                        $OrderFolio->spaces = $order["spaces"];
+                        $OrderFolio->save();
+                        foreach($request->orders as $order){
+                            $ord = Order::find($order["order_id"]);
+                            if($ord->comprobateSpacesMissingPrint() == 0){
+                                $taller = New StatusOrder();
+                                $taller->status = 4;
+                                $taller->order_id = $ord->id;
+                                $taller->user_id = $user->id;
+                                $taller->save();
+                            }
+                        }
+                        
+                    }
+                }catch(Exception $e){
+                    return response()->json(['status'=>'Unprocessable Entity', 'errors'=>$e->errorInfo], 400);
+                }
+                return response()->json(["status"=> "ok."],200);
+            }else{
+                return response()->json(["status"=> "error", "error"=> "Rules print" ],422);
+            }
+        }
+        return response()->json(['status'=>'Ok.', 'data'=>"No posee los permisos"], 401);
+    }
+
+    public function storeBackup(Request $request){
+        $user = JWTAuth::parseToken()->authenticate();
+        if($user->type === 1){
             $rules = array(
                 'order_id'=> 'exists:orders,id'
             );

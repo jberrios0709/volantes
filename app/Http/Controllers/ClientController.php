@@ -30,7 +30,8 @@ class ClientController extends Controller
         $rules = array(
 			'name'=> 'required',
 			'name_contact'=> 'required',
-			'charge'=> 'required'
+			'charge'=> 'required',
+			'address'=> 'required'
         );
         $validate = Validator::make($request->all(), $rules);
         if ($validate->fails()) {
@@ -53,7 +54,8 @@ class ClientController extends Controller
         $rules = array(
 			'name'=> 'required',
 			'name_contact'=> 'required',
-			'charge'=> 'required'
+			'charge'=> 'required',
+			'address'=> 'required'
         );
         $validate = Validator::make($request->all(), $rules);
         if ($validate->fails()) {
