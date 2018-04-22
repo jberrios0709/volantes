@@ -54,11 +54,16 @@ class EmailController extends Controller
        if(!Client::find($client) || Email::where('client_id', '=', $client)->where('id', '=', $email)->get()->isEmpty()){
             return response()->json(["status"=> "Not Found" ],404);
         }else{
-			try {
-                Email::where('client_id', '=', $client)->where('id', '=', $email)->delete();
-				return response()->json(["status"=> "ok." ],200);
-			} catch (Exception $e) {
-				return response()->json(['status'=>'Unprocessable Entity', 'errors'=>$e->errorInfo], 400);
+			$clientSave = Client::find($client);
+			if((count($clientSave->emails)-1) >= 1){
+				try {
+					Email::where('client_id', '=', $client)->where('id', '=', $email)->delete();
+					return response()->json(["status"=> "ok." ],200);
+				} catch (Exception $e) {
+					return response()->json(['status'=>'Unprocessable Entity', 'errors'=>$e->errorInfo], 400);
+				}
+			}else{
+				return response()->json(["status"=> "The user must have at least one registered email" ],400);
 			}
 		}
     }

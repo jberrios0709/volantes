@@ -4,6 +4,9 @@
 
     <style>
         @page {margin: 0cm; }
+        body{
+            font:arial;
+        }
         div.header{
             text-align: center;
         }
@@ -86,10 +89,19 @@
             </div>
             <div class="row">
                 <div class="col-6"><b>Gramage</b>   {{$order->garnet}}</div>
-                <div class="col-6"><b>Cantidad</b>  {{$order->quantity}}</div>
+                <div class="col-6"><b>Cantidad</b>  {{number_format($order->quantity)}}</div>
             </div>
             <div class="row">
-                <div class="col-6"><b>Lados</b>   {{$order->sides}}</div>
+                <div class="col-6"><b>Lados</b>   
+                @if($order->sides == 1)
+                    Un solo lado
+                @elseif($order->sides == 2)
+                    Dos lados diferentes
+                @elseif($order->sides == 3)
+                    Dos lados iguales
+                @endif
+                
+                </div>
             </div>
         </div>
 
@@ -97,15 +109,15 @@
             <div class="title">Resumen del pago</div>
             <div class="row" >
                 <div class="col-6">
-                    <b>Precio diseño </b> {{$order->price_design}}
+                    <b>Precio diseño </b> {{number_format($order->price_design)}}
                 </div>
                 <div class="col-6">
-                    <b>Seña del trabajo </b> {{$order->trace}}
+                    <b>Seña del trabajo </b> {{number_format($order->trace)}}
                 </div>
             </div>
             <div class="row" >
                 <div class="col-6">
-                    <b>Precio envio </b> {{$order->price_send}}
+                    <b>Precio envio </b> {{number_format($order->price_send)}}
                 </div>
                 <div class="col-6">
                     <b>Método de pago </b> {{$order->method_payment}}
@@ -113,18 +125,18 @@
             </div>
             <div class="row" >
                 <div class="col-6">
-                    <b>Precio producto </b> {{$order->price_flyer}}
+                    <b>Precio producto </b> {{number_format($order->price_flyer)}}
                 </div>
                 <div class="col-6">
-                    <b>Total </b> {{$order->price_design + $order->price_send + $order->price_flyer}}
+                    <b>Total </b> {{number_format($order->price_design + $order->price_send + $order->price_flyer)}}
                 </div>
             </div>        
             <div class="row" >
                 <div class="col-6">
-                    <b>Abonos</b> {{$abonos}}
+                    <b>Abonos</b> {{number_format($abonos)}}
                 </div>
                 <div class="col-6">
-                    <b>Deuda</b> {{$order->price_design + $order->price_send + $order->price_flyer - $order->trace - $abonos}}
+                    <b>Deuda</b> {{number_format($order->price_design + $order->price_send + $order->price_flyer - $order->trace - $abonos)}}
                 </div>
             </div>
             </div>

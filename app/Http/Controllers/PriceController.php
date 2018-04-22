@@ -11,12 +11,59 @@ use App\Price;
 class PriceController extends Controller
 {
     //
+    public function currently(){
+        $first=Measure::find(1);
+        $second=Measure::find(2);
+        $three=Measure::find(3);
+        $four=Measure::Find(4);
+        return response()->json(["data"=>[
+                                    "garnet115"=>[
+                                        "first"=>[
+                                            "oneWeek"=>$first->prices()->where('time','=',1)->where('garnet','=','115gr')->orderBy('id','desc')->take(1)->get(),
+                                            "threeWeek"=>$first->prices()->where('time','=',3)->where('garnet','=','115gr')->orderBy('id','desc')->take(1)->get()
+                                        ],
+                                        "second"=>[
+                                            "oneWeek"=>$second->prices()->where('time','=',1)->where('garnet','=','115gr')->orderBy('id','desc')->take(1)->get(),
+                                            "threeWeek"=>$second->prices()->where('time','=',3)->where('garnet','=','115gr')->orderBy('id','desc')->take(1)->get()
+                                        ],
+                                        "three"=>[
+                                            "oneWeek"=>$three->prices()->where('time','=',1)->where('garnet','=','115gr')->orderBy('id','desc')->take(1)->get(),
+                                            "threeWeek"=>$three->prices()->where('time','=',3)->where('garnet','=','115gr')->orderBy('id','desc')->take(1)->get()
+                                        ],
+                                        "four"=>[
+                                            "oneWeek"=>$four->prices()->where('time','=',1)->where('garnet','=','115gr')->orderBy('id','desc')->take(1)->get(),
+                                            "threeWeek"=>$four->prices()->where('time','=',3)->where('garnet','=','115gr')->orderBy('id','desc')->take(1)->get()
+                                        ]
+                                    ],
+                                    "garnet150"=>[
+                                        "first"=>[
+                                            "oneWeek"=>$first->prices()->where('time','=',1)->where('garnet','=','150gr')->orderBy('id','desc')->take(1)->get(),
+                                            "threeWeek"=>$first->prices()->where('time','=',3)->where('garnet','=','150gr')->orderBy('id','desc')->take(1)->get()
+                                        ],
+                                        "second"=>[
+                                            "oneWeek"=>$second->prices()->where('time','=',1)->where('garnet','=','150gr')->orderBy('id','desc')->take(1)->get(),
+                                            "threeWeek"=>$second->prices()->where('time','=',3)->where('garnet','=','150gr')->orderBy('id','desc')->take(1)->get()
+                                        ],
+                                        "three"=>[
+                                            "oneWeek"=>$three->prices()->where('time','=',1)->where('garnet','=','150gr')->orderBy('id','desc')->take(1)->get(),
+                                            "threeWeek"=>$three->prices()->where('time','=',3)->where('garnet','=','150gr')->orderBy('id','desc')->take(1)->get()
+                                        ],
+                                        "four"=>[
+                                            "oneWeek"=>$four->prices()->where('time','=',1)->where('garnet','=','150gr')->orderBy('id','desc')->take(1)->get(),
+                                            "threeWeek"=>$four->prices()->where('time','=',3)->where('garnet','=','150gr')->orderBy('id','desc')->take(1)->get()
+                                        ]
+                                    ]
+                                    
+                                ]],200);
+    }
+
     public function index(){
         $first=Measure::find(1);
         $second=Measure::find(2);
         $three=Measure::find(3);
         $four=Measure::Find(4);
         return response()->json(["data"=>[
+                                    "register"=>count($first->prices),
                                     "garnet115"=>[
                                         "first"=>[
                                             "oneWeek"=>$first->prices()->where('time','=',1)->where('garnet','=','115gr')->orderBy('id','desc')->get(),

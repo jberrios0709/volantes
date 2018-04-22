@@ -6,6 +6,7 @@ use App\Http\Requests;
 use App\Order;
 use App\Utilities;
 use App\Branch;
+use App\ContactMessage;
 use App\StatusOrder;
 use App\StatusDesign;
 use Illuminate\Database\QueryException;
@@ -16,14 +17,12 @@ class OrderController extends Controller
 {
     //
 
-    
-
     public function show($id){
         $order = Order::find($id);
         if($order != null){
-            $order->branch->client;
+            $order->branch->client->phones;
             $order->abonos;
-            $order->status_order;
+            $order->status_order[1]->user;
         }
         return response()->json(['status'=>'Ok.', 'data'=>$order], 200);
         
@@ -67,7 +66,7 @@ class OrderController extends Controller
                 $initDesign = New StatusDesign();
                 $initDesign->order_id = $save->id;
                 $initDesign->save();
-                
+                ContactMessage::newOrder($save->id);
 				return response()->json(["status"=> "ok.", "data"=> $save ],200);
 			} catch (Exception $e) {
 				return response()->json(['status'=>'Unprocessable Entity', 'errors'=>$e->errorInfo], 400);
@@ -84,18 +83,20 @@ class OrderController extends Controller
             case 1:
                 return response()->json(['status'=>'Ok.', 'data'=>Order::all()], 200);
             case 2:
-                return response()->json(['status'=>'Ok.', 'data'=>Utilities::orderArray(Order::indexCustom(2),"delivery")], 200);
+                return response()->json(['status'=>'Ok.', 'data'=>Utilities::orderArray(Order::indexCustom("2"),"delivery")], 200);
             case 3:
-                return response()->json(['status'=>'Ok.', 'data'=>Order::indexCustom(3)], 200);
+                return response()->json(['status'=>'Ok.', 'data'=>Order::indexCustom("3")], 200);
             case 4:
-                return response()->json(['status'=>'Ok.', 'data'=>Order::indexCustom(4)], 200);
+                return response()->json(['status'=>'Ok.', 'data'=>Order::indexCustom("4")], 200);
             case 5:
-                return response()->json(['status'=>'Ok.', 'data'=>Utilities::orderArray(Order::indexCustom(5),"delivery")], 200);
+                return response()->json(['status'=>'Ok.', 'data'=>Utilities::orderArray(Order::indexCustom("5"),"delivery")], 200);
             case 7:
-                return response()->json(['status'=>'Ok.', 'data'=>Order::indexCustom(7)], 200);
+                return response()->json(['status'=>'Ok.', 'data'=>Order::indexCustom("7")], 200);
             case "date":
                 if($_GET["init"] == "true"){
                     $hasta = date('Y-m-j');
+                    $hasta = strtotime('+ 1 day' , strtotime( $hasta ));
+                    $hasta = date('Y-m-j', $hasta);
                     $desde = strtotime('- 10 day' , strtotime( $hasta ));
                     $desde = date('Y-m-j', $desde);
                     return response()->json(['status'=>'Ok.', 'desde'=>$desde, 'hasta'=>$hasta, 'data'=>Utilities::orderArray(Order::inForDate($desde,$hasta),"sell")], 200);
@@ -108,10 +109,10 @@ class OrderController extends Controller
     
     public function design($order,Request $request){
         $user = JWTAuth::parseToken()->authenticate();
-        if($user->type === 1 || $user->type === 2){
+        if($user->type == "1" || $user->type == "2"){
             $ord = Order::find($order);
             $status =  $ord->status_order;
-            if($status[count($status)-1]->status === 2){
+            if($status[count($status)-1]->status == 2){
                 $ord->status_design()->update($request->all());
                 if($request->responsibility && $request->finish){
                     $print = New StatusOrder();
@@ -120,6 +121,7 @@ class OrderController extends Controller
                     $print->user_id = $user->id;
                     $print->save();
                     $ord->addDateDelivery();
+                    ContactMessage::design($ord->id);
                     return response()->json(['status'=>'Ok.', 'statusOrder'=>3], 200);
                 }else{
                     return response()->json(['status'=>'Ok.', 'data'=>$ord->status_design, 'statusOrder'=>2], 200);
@@ -133,7 +135,7 @@ class OrderController extends Controller
 
     public function taller($order,Request $request){
         $user = JWTAuth::parseToken()->authenticate();
-        if($user->type === 1 || $user->type === 2){
+        if($user->type == "1" || $user->type == "2"){
             $ord = Order::find($order);
             $status =  $ord->status_order;
             if($ord->product != "Volantes"){
@@ -149,6 +151,7 @@ class OrderController extends Controller
                     $print->order_id = $ord->id;
                     $print->user_id = $user->id;
                     $print->save();
+                    ContactMessage::printer($ord->id);
                 }
                 return response()->json(['status'=>'Ok.'], 200);
             }else{
@@ -160,7 +163,7 @@ class OrderController extends Controller
 
     public function cancel($order,Request $request){
         $user = JWTAuth::parseToken()->authenticate();
-        if($user->type === 1){
+        if($user->type == "1"){
             $ord = Order::find($order);
             $cancel = New StatusOrder();
             $cancel->status = 8;

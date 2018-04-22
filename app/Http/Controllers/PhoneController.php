@@ -56,12 +56,17 @@ class PhoneController extends Controller
         if(!Client::find($client) || Phone::where('client_id', '=', $client)->where('id', '=', $phone)->get()->isEmpty()){
              return response()->json(["status"=> "Not Found" ],404);
          }else{
-             try {
-                 Phone::where('client_id', '=', $client)->where('id', '=', $phone)->delete();
-                 return response()->json(["status"=> "ok." ],200);
-             } catch (Exception $e) {
-                 return response()->json(['status'=>'Unprocessable Entity', 'errors'=>$e->errorInfo], 400);
-             }
+            $clientSave = Client::find($client);
+			if((count($clientSave->emails)-1) >= 1){
+                try {
+                    Phone::where('client_id', '=', $client)->where('id', '=', $phone)->delete();
+                    return response()->json(["status"=> "ok." ],200);
+                } catch (Exception $e) {
+                    return response()->json(['status'=>'Unprocessable Entity', 'errors'=>$e->errorInfo], 400);
+                }
+            }else{
+				return response()->json(["status"=> "The user must have at least one registered number" ],400);
+            }
          }
      }
 

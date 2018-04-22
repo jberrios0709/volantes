@@ -86,7 +86,7 @@ class Order extends Model
 
     public function rulesPrint($spaces){
         $status = $this->status_order;
-        if($status[count($status)-1]->status === 3 && $this->comprobateSpacesMissingPrint() > 0 && $this->comprobateSpacesMissingPrint() >= $spaces){
+        if($status[count($status)-1]->status == "3" && $this->comprobateSpacesMissingPrint() > 0 && $this->comprobateSpacesMissingPrint() >= $spaces){
             return true;
         }
         return false;
@@ -169,6 +169,7 @@ class Order extends Model
 		foreach(Branch::find($branch)->orders as $order){
             $order;
             $order->abonos;
+            $order->branch;
             foreach($order->status_order as $info){
                 $info->user;
             };
@@ -179,16 +180,18 @@ class Order extends Model
 
     public static function indexCustom($option){  
         $tmp = [];
-        
 		foreach(Branch::all() as $branch){
             foreach($branch->orders as $order){
                 $or = $order->status_order;
                 if($or[count($or)-1]->status === $option){
                     $order->branch->client;
+                    $order->branch->client->phones;
+                    $order->branch->client->emails;
                     $order->status_design;
-                    if($option === 5 || $option === 7){
+                    $order->status_order[0]->user;
+                    if($option === "5" || $option === "7"){
                         $order->abonos;
-                    }else if($option === 3){
+                    }else if($option === "3"){
                         $order->spacesInMissing = $order->comprobateSpacesMissingPrint();
                     }
                     array_push($tmp,$order);
@@ -201,9 +204,11 @@ class Order extends Model
     public static function inForDate($desde, $hasta){
         $orders = [];
         foreach(Order::whereBetWeen('created_at',[$desde,$hasta])->get() as $order){
-            $order->branch->client;
-            $order->date_sell = $order->created_at;
-            array_push($orders, $order);
+            if($order->trace > 0){
+                $order->branch->client;
+                $order->date_sell = $order->created_at;
+                array_push($orders, $order);
+            }
         }
         foreach(Abono::whereBetWeen('created_at',[$desde,$hasta])->get() as $abono){
             $order = Order::find($abono->order_id);

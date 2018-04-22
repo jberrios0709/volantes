@@ -3,6 +3,9 @@
     <head>
     <link rel="shortcut icon" type="image/x-icon" href="./favicon.ico">
     <style>
+        body{
+            font:arial
+        }
         div.header{
             text-align:center;
         }
@@ -58,12 +61,12 @@
                             <td>{{$order->branch->client->name}}</td>
                             <td>{{$order->id}}</td>
                             <td>{{$order->product}}</td>
-                            <td>{{$order->quantity}}</td>
+                            <td>{{number_format($order->quantity)}}</td>
                             @if($order->abono)
-                            <td>{{$order->abono->mount}}</td>
+                            <td>{{number_format($order->abono->mount)}}</td>
                             <td>Abono</td>
                             @else
-                            <td>{{$order->trace}}</td>
+                            <td>{{number_format($order->trace)}}</td>
                             <td>Seña</td>
                             @endif
                             <td>{{$order->method_payment}}</td>

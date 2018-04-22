@@ -34,10 +34,10 @@
         <img src="http://cienporcientofolletos.com.ar/assets/logo.png" alt="">
     </div>
     <div class="content">
-        <p>
+    <p>
             Buenas {{$order->branch->client->name_contact}}! <br/>
-            Quería informarte que entro tu pedido: <br/><br/>
-
+            Buenas noticias: tu trabajo está listo!<br/>
+            <br/>
             Sucursal: {{$order->branch->name}}<br/>
             Trabajo: {{$order->product}} <br/>
             Gramaje: {{$order->garnet}} <br/>
@@ -58,25 +58,29 @@
                 Tiempo de entrega: {{$order->time_delivery / 7}} semana(s) después de tener el ok del diseño <br/>
             @endif
             
-            <br/><br/>
+            <br/>
             Precio total: ${{$order->price_flyer + $order->price_design + $order->price_send}} <br/>
             Diseño: ${{$order->price_send}} <br/>
             Impresión: ${{$order->price_flyer}} <br/>
             Pagaste: ${{$order->trace}} <br/>
-            Falta pagar: ${{$order->price_flyer + $order->price_design + $order->price_send - $order->price_trace}} <br/>
+            Falta pagar: ${{$order->price_flyer + $order->price_design + $order->price_send - $order->price_trace - $abonos}} <br/>
             <br/>
-            En caso de que tengamos que hacer el diseño nosotros, el encargado de diseños, Antón, te contactará para mostrarte el diseño hecho, y así definir lo que se vaya a imprimir. Una vez tengamos tu aprobación, el trabajo pasará a impresión. <br/>
-            En caso de que hayas mandado el diseño por tu cuenta, lo revisaremos y si hay que corregir algo nos comunicaremos contigo. Si está en condiciones te mandaremos un mail para avisarte cuando pasemos tu trabajo a impresión. <br/>
+            En caso de venir a buscar el trabajo a nuestra oficina podes acercarte de Lunes a Viernes de 9 a 18hs a Enrique Ochoa 800 (esquina con amancio Alcorta, entre Amancio Alcorta y Alfredo Colmo), Pompeya, CABA.<br/>
+            Link de Google Maps: https://goo.gl/maps/TjvAibaKu7G2<br/>
             <br/>
-            Asegurate de haber leido la letra chica en nuestro sitio web para evitar inconvenientes: <br/>
-            http://www.cienporcientofolletos.com.ar/letra-chica.html <br/>
+            Si queres que te lo mandemos:<br/>
+            Opción A (estas en CABA): te lo mandamos en moto ($150) o flete (en caso de ser un pedido grande). Tendrías que responderme este mail con la dirección y horario en que te lo pueda mandar.<br/>
             <br/>
-            No respondas este mail. <br/>
-            Cualquier ayuda que necesites llamanos a: <br/>
-            3221-2889 <br/>
-            15 2850-7362 <br/>
-            www.cienporcientofolletos.com.ar/ <br/>
-            Dirección: Enrique Ochoa 800, Pompeya, CABA 
+            Opción B (estas fuera de CABA): te lo mandamos por Correo Argentino usando el sistema de Mercado Libre. Es muy sencillo: con el link que te paso clickeas en comprar, llenas los datos de destino y lo pagas. Ya con esa info yo llevo tu trabajo al Correo Argentino para que te lo manden. El correo suele demorar entre 2 a 5 días. Este es el link:<br/>
+            https://articulo.mercadolibre.com.ar/MLA-686473433-impresion-urgente-de-volantes-afiches-boletas-electorales-_JM<br/>
+            <br/>
+            Opción C (estas fuera de CABA): Te lo mandamos por otro medio, otra empresa de envíos que nos indiques. En caso de que lo tengamos que llevar a la empresa te cobramos $150 si es que la empresa esta en CABA.<br/>
+            <br/>
+            Cualquier ayuda que necesites llamanos a:<br/>
+            3221-2889<br/>
+            15 2850-7362<br/>
+            www.cienporcientofolletos<br/>
+            Dirección: Enrique Ochoa 800, Pompeya, CABA<br/>
         </p>
         <div>
             <img src="http://cienporcientofolletos.com.ar/assets/footer.png" alt="">

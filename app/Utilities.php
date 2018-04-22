@@ -21,11 +21,11 @@ class Utilities extends Model
     }
 
     public static function createDate( $a, $b ) {
-        return strtotime($a['created_at']) - strtotime($b['created_at']);
+        return strtotime($a->created_at) - strtotime($b->created_at);
     }
 
     public static function delivery( $a, $b ) {
-        return strtotime($a['date_delivery']) - strtotime($b['date_delivery']);
+        return strtotime($a->date_delivery) - strtotime($b->date_delivery);
     }
 
     public static function sell( $a, $b ) {

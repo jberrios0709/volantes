@@ -18,6 +18,7 @@ Route::group(['prefix' => 'api/1.0/','middleware' => ['cors']] , function () {
 	Route::post('calculateSpaces','UtilitiesController@calculateSpaces');
 	Route::get('pdf/delivery/{id}','PdfController@delivery');
 	Route::get('pdf/inForDate','PdfController@inForDate');
+	Route::get('priceCurrently','PriceController@currently');
 });
 
 
@@ -27,6 +28,8 @@ Route::group(['prefix' => 'api/1.0/','middleware' => ['cors','jwt.auth']] , func
 	Route::resource('user', 'UserController',
 		['only' => ['index', 'store', 'update', 'show']]
 	);
+	route::get('verifyEmail','UserController@verifyEmailNotExist');
+	Route::put('user/{id}/password','UserController@updatePassword');
 
 	Route::resource('price', 'PriceController',
 		['only' => ['index', 'store']]

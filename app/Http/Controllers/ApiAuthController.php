@@ -22,8 +22,13 @@ class ApiAuthController extends Controller
             return response()->json(["error"=>"something weng wrong"],500);
         }
         $user = User::where('email','=',$request->email)->get()->first();
-        $dataUser = ["name"=>$user->name, "type"=>$user->type];
-        return response()->json(["token"=>$token, "user"=>$dataUser],200);
+        if($user->actived){
+            $dataUser = ["name"=>$user->name, "type"=>$user->type];
+            return response()->json(["token"=>$token, "user"=>$dataUser],200);
+        }else{
+            return response()->json(["error"=>"invalid credentials"],401);
+        }
+        
     }
 
     public function userRefreshAuth(Request $request){
