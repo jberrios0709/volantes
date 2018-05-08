@@ -26,7 +26,7 @@ class PrintController extends Controller
             foreach($request->orders as $order){
                 $ord = Order::find($order["order_id"]);
                 $total += $order["spaces"];
-                if(!$ord->rulesPrint($order["spaces"])){
+                if(!$ord->rulesPrint($order["spaces"]) || $order["spaces"] <= 0){
                     $rules = false;
                 }
             }

@@ -27,6 +27,10 @@
             width: 80%;
             height: 30px;
         }
+        b.not{
+            color:red;
+            font-weight:bold;
+        }
     </style>
 </head>
 <body>
@@ -36,22 +40,12 @@
     <div class="content">
         <p>
             Buenas {{$order->branch->client->name_contact}}! <br/>
-            Quería informarte que entro tu pedido: <br/><br/>
+            Quería informarte que nos llego tu pedido: <br/><br/>
 
-            Sucursal: {{$order->branch->name}}<br/>
             Trabajo: {{$order->product}} <br/>
             Gramaje: {{$order->garnet}} <br/>
             Tamaño: {{$order->size}} <br/>
             Cantidad: {{$order->quantity}} <br/>
-            @if($order->design == 1)
-                Diseño: Nuevo diseño <br/>
-            @if($order->design == 2)
-                Diseño: Correción <br/>
-            @if($order->design == 3)
-                Diseño:  Diseño anterior <br/>
-            @if($order->design == 4)
-                Diseño: Hecho por el cliente <br/>   
-            @endif
             @if($order->special_time)
                 Fecha de entrega: {{$order->date_delivery}} <br/>
             @else
@@ -60,10 +54,11 @@
             
             <br/><br/>
             Precio total: ${{$order->price_flyer + $order->price_design + $order->price_send}} <br/>
-            Diseño: ${{$order->price_send}} <br/>
+            Diseño: ${{$order->price_design}} <br/>
+            Envio: ${{$order->price_send}} <br/>
             Impresión: ${{$order->price_flyer}} <br/>
             Pagaste: ${{$order->trace}} <br/>
-            Falta pagar: ${{$order->price_flyer + $order->price_design + $order->price_send - $order->price_trace}} <br/>
+            Falta pagar: ${{($order->price_flyer + $order->price_design + $order->price_send) - $order->trace}} <br/>
             <br/>
             En caso de que tengamos que hacer el diseño nosotros, el encargado de diseños, Antón, te contactará para mostrarte el diseño hecho, y así definir lo que se vaya a imprimir. Una vez tengamos tu aprobación, el trabajo pasará a impresión. <br/>
             En caso de que hayas mandado el diseño por tu cuenta, lo revisaremos y si hay que corregir algo nos comunicaremos contigo. Si está en condiciones te mandaremos un mail para avisarte cuando pasemos tu trabajo a impresión. <br/>
@@ -71,10 +66,11 @@
             Asegurate de haber leido la letra chica en nuestro sitio web para evitar inconvenientes: <br/>
             http://www.cienporcientofolletos.com.ar/letra-chica.html <br/>
             <br/>
-            No respondas este mail. <br/>
-            Cualquier ayuda que necesites llamanos a: <br/>
+            <b class="not">No respondas este mail.</b> <br/>
+            Cualquier ayuda que necesites contáctanos a: <br/>
             3221-2889 <br/>
             15 2850-7362 <br/>
+            cienporcientofolletos@gmail.com <br/>
             www.cienporcientofolletos.com.ar/ <br/>
             Dirección: Enrique Ochoa 800, Pompeya, CABA 
         </p>

@@ -9,7 +9,7 @@ use App\User;
 
 class ApiAuthController extends Controller
 {
-    //
+    //Metodo creado segun documentacion de jwtTymon
     public function userAuth(Request $request){
         $credentials=$request->only('email','password');
         $token=null;

@@ -16,11 +16,12 @@ class Folio extends Model
         return $this->hasMany('App\OrderFolio');
     }
     
+    //Metodo para colocar un limite a la cantidad de espacios en el folio
     public function spacesAvailable(){
-        $available = 23;
+        $available = 23; //Cantidad maxima 
         foreach($this->orders_folio as $spaces){
             $available -= $spaces->spaces;
         }
-        return $available;
+        //return $available;
     }
 }

@@ -12,7 +12,7 @@ class UtilitiesController extends Controller
     //
 
     public function calculatePriceBase(Request $request){
-        $priceCalculate = Utilities::calculatePriceFlyer($request->size,$request->time_delivery,$request->quantity, $request->garnet);
+        $priceCalculate = Utilities::calculatePriceFlyer($request->product,$request->size,$request->time_delivery,$request->quantity, $request->garnet);
         
         if(!$priceCalculate){
             return response()->json(['price'=>"Price special"],200);

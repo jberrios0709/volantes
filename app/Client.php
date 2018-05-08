@@ -47,6 +47,7 @@ class Client extends Model
         }
     }
 
+    //Se recorre con un for para poder añadir al objeto phone sus 2 propiedades
     public function savePhones($phones, $explanatorys){
         for($i = 0; $i < count($phones); ++$i) {
             $tmp=New Phone();

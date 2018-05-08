@@ -57,7 +57,68 @@ class Order extends Model
 
     public function orders_folio(){
         return $this->hasMany('App\OrderFolio');
-	}
+    }
+    
+    //Metodos index: Se crearon 3 metodos para agrupar las diferentes posibilidades 
+    //de solicitudes segun tipo de usuario, status de la orden y fechas
+
+    public static function indexAdmin($branch){
+        $tmp = [];
+		foreach(Branch::find($branch)->orders as $order){
+            $order;
+            $order->abonos;
+            $order->branch;
+            foreach($order->status_order as $info){
+                $info->user;
+            };
+			array_push($tmp,$order);
+        };
+        return $tmp;
+    }
+
+    public static function indexCustom($option){  
+        $tmp = [];
+		foreach(Branch::all() as $branch){
+            foreach($branch->orders as $order){
+                $or = $order->status_order;
+                if($or[count($or)-1]->status === $option){
+                    $order->branch->client;
+                    $order->branch->client->phones;
+                    $order->branch->client->emails;
+                    $order->status_design;
+                    $order->status_order[0]->user;
+                    if($option === "5" || $option === "7"){
+                        $order->abonos;
+                    }else if($option === "3"){
+                        $order->spacesInMissing = $order->comprobateSpacesMissingPrint();
+                    }
+                    array_push($tmp,$order);
+                }
+            }
+		};
+		return $tmp;
+    }    
+
+    public static function inForDate($desde, $hasta){
+        $orders = [];
+        foreach(Order::whereBetWeen('created_at',[$desde,$hasta])->get() as $order){
+            if($order->trace > 0){
+                $order->branch->client;
+                $order->date_sell = $order->created_at;
+                array_push($orders, $order);
+            }
+        }
+        foreach(Abono::whereBetWeen('created_at',[$desde,$hasta])->get() as $abono){
+            $order = Order::find($abono->order_id);
+            $order->branch->client;
+            $order->abono = $abono;
+            $order->date_sell = $abono->created_at;
+            array_push($orders, $order);
+        }
+        return $orders;
+    }
+
+    //Logica de negocio
 
     public function rulesBussines(){
         $this->rulesSpecial();
@@ -121,6 +182,7 @@ class Order extends Model
         }
     }
 
+    //Metodo para definir si una orden entregada pasa al estado de finalizada o deudor
     public function finishOrDebit(){
         $debit = $this->price_flyer + $this->price_send + $this->price_design - $this->trace;
         foreach($this->abonos as $a){
@@ -140,7 +202,7 @@ class Order extends Model
 
     private function calculatePriceBase(){
         if(!$this->size_special && !$this->price_flyer_special){
-            $this->price_flyer=Utilities::calculatePriceFlyer($this->size,$this->time_delivery,$this->quantity,$this->garnet);
+            $this->price_flyer=Utilities::calculatePriceFlyer($this->product,$this->size,$this->time_delivery,$this->quantity,$this->garnet);
         }else{
             $this->price_flyer_special=true;
         };
@@ -164,60 +226,6 @@ class Order extends Model
         }
     }
 
-    public static function indexAdmin($branch){
-        $tmp = [];
-		foreach(Branch::find($branch)->orders as $order){
-            $order;
-            $order->abonos;
-            $order->branch;
-            foreach($order->status_order as $info){
-                $info->user;
-            };
-			array_push($tmp,$order);
-        };
-        return $tmp;
-    }
-
-    public static function indexCustom($option){  
-        $tmp = [];
-		foreach(Branch::all() as $branch){
-            foreach($branch->orders as $order){
-                $or = $order->status_order;
-                if($or[count($or)-1]->status === $option){
-                    $order->branch->client;
-                    $order->branch->client->phones;
-                    $order->branch->client->emails;
-                    $order->status_design;
-                    $order->status_order[0]->user;
-                    if($option === "5" || $option === "7"){
-                        $order->abonos;
-                    }else if($option === "3"){
-                        $order->spacesInMissing = $order->comprobateSpacesMissingPrint();
-                    }
-                    array_push($tmp,$order);
-                }
-            }
-		};
-		return $tmp;
-    }    
-
-    public static function inForDate($desde, $hasta){
-        $orders = [];
-        foreach(Order::whereBetWeen('created_at',[$desde,$hasta])->get() as $order){
-            if($order->trace > 0){
-                $order->branch->client;
-                $order->date_sell = $order->created_at;
-                array_push($orders, $order);
-            }
-        }
-        foreach(Abono::whereBetWeen('created_at',[$desde,$hasta])->get() as $abono){
-            $order = Order::find($abono->order_id);
-            $order->branch->client;
-            $order->abono = $abono;
-            $order->date_sell = $abono->created_at;
-            array_push($orders, $order);
-        }
-        return $orders;
-    }
+    
 
 }

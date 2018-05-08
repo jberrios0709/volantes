@@ -133,19 +133,20 @@ class OrderController extends Controller
         return response()->json(['status'=>'Ok.', 'data'=>"No posee los permisos"], 401);    
     }
 
+    //Aqui solo entran ordenes especiales (otro tipo de producto)
     public function taller($order,Request $request){
         $user = JWTAuth::parseToken()->authenticate();
         if($user->type == "1" || $user->type == "2"){
             $ord = Order::find($order);
             $status =  $ord->status_order;
             if($ord->product != "Volantes"){
-                if($status[count($status)-1]->status === 3){
+                if($status[count($status)-1]->status == "3"){
                     $taller = New StatusOrder();
                     $taller->status = 4;
                     $taller->order_id = $ord->id;
                     $taller->user_id = $user->id;
                     $taller->save();
-                }else if($status[count($status)-1]->status === 4){
+                }else if($status[count($status)-1]->status == "4"){
                     $print = New StatusOrder();
                     $print->status = 5;
                     $print->order_id = $ord->id;
@@ -174,5 +175,7 @@ class OrderController extends Controller
         }
         return response()->json(['status'=>'Ok.', 'data'=>"No posee los permisos"], 401);    
     }
+
+
 
 }

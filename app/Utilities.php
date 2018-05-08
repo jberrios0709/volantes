@@ -36,10 +36,10 @@ class Utilities extends Model
         return ($flyers/5000)*($measure/150);
     }
 
-    public static function calculatePriceFlyer($measure, $timeDelivered, $quantityFlyers,$garnet){
+    public static function calculatePriceFlyer($product,$measure, $timeDelivered, $quantityFlyers,$garnet){
         $time = $timeDelivered/7;
         $measureP = Measure::find($measure);
-        if(($time == 1 || $time == 3) && $measureP != null){ 
+        if($product == "Volantes" && ($time == 1 || $time == 3) && $measureP != null){ 
             $prices = Price::where('garnet','=',$garnet)->where('measure_id','=',$measure)->where('time','=',$time)->orderBy('id','desc')->first();
             switch ($quantityFlyers) {
                 case 5000:

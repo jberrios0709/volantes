@@ -27,6 +27,10 @@
             width: 80%;
             height: 30px;
         }
+        b.not{
+            color:red;
+            font-weight:bold;
+        }
     </style>
 </head>
 <body>
@@ -40,10 +44,11 @@
         Cuando esté listo el trabajo te vamos a avisar por este medio.<br/>
         </p>
         <br/>
-        No respondas este mail. <br/>
-        Cualquier ayuda que necesites llamanos a: <br/>
+        <b class="not">No respondas este mail.</b> <br/>
+        Cualquier ayuda que necesites contáctanos a: <br/>
         3221-2889 <br/>
         15 2850-7362 <br/>
+        cienporcientofolletos@gmail.com <br/>
         www.cienporcientofolletos.com.ar/ <br/>
         Dirección: Enrique Ochoa 800, Pompeya, CABA <br/>
         <div>

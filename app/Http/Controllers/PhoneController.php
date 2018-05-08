@@ -54,10 +54,10 @@ class PhoneController extends Controller
 
     public function destroy($client, $phone){
         if(!Client::find($client) || Phone::where('client_id', '=', $client)->where('id', '=', $phone)->get()->isEmpty()){
-             return response()->json(["status"=> "Not Found" ],404);
-         }else{
+            return response()->json(["status"=> "Not Found" ],404);
+        }else{
             $clientSave = Client::find($client);
-			if((count($clientSave->emails)-1) >= 1){
+			if((count($clientSave->phones)-1) >= 1){
                 try {
                     Phone::where('client_id', '=', $client)->where('id', '=', $phone)->delete();
                     return response()->json(["status"=> "ok." ],200);
@@ -67,7 +67,7 @@ class PhoneController extends Controller
             }else{
 				return response()->json(["status"=> "The user must have at least one registered number" ],400);
             }
-         }
+        }
      }
 
 

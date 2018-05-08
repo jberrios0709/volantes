@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html>
     <head>
-
     <style>
         @page {margin: 0cm; }
         body{
-            font:arial;
+            font-family:  serif;
         }
         div.header{
             text-align: center;
@@ -46,6 +45,9 @@
             text-align:center;
             margin-bottom:15px;
         }
+        div.row{
+            padding-left:5px;
+        }
     </style>
         
     </head>
@@ -60,12 +62,12 @@
         </div>
         <div class="first">
             <div class="row">
-                <div class="col-6"><b>Deuda</b><label class="red">{{$order->price_design + $order->price_send + $order->price_flyer - $order->trace - $abonos}}</label></div>
+                <div class="col-6"><b>Deuda  </b><label class="red">${{$order->price_design + $order->price_send + $order->price_flyer - $order->trace - $abonos}}</label></div>
                 <div class="col-6"><b>Fecha del pedido</b> {{$order->created_at}}</div>
             </div>
             <div class="row">
-                <div class="col-6"><b>N° de pedido</b> {{$order->id}}</div>
-                <div class="col-6"><b>Fecha de entrega</b> <label class="red">{{$order->date_delivery}}</label></div>
+                <div class="col-6"><b>N° de pedido</b>  {{$order->id}}</div>
+                <div class="col-6"><b>Fecha de entrega</b>  <label class="red">{{$order->date_delivery}}</label></div>
             </div>
         </div>
         <div class="section">
@@ -78,8 +80,8 @@
                 <div class="col-6"><b>Nombre</b>   {{$client->name_contact}}</div>
                 <div class="col-6"><b>Teléfono</b>  {{$client->phones[0]->number}}</div>
             </div>
-            <div class="col-12"><b>Direccion</b>   {{$client->address}}</div>
-            <div class="col-12"><b>Comentario de envio</b>   <label class="red">{{$order->description_send}}</label></div>
+            <div class="row col-12"><b>Direccion</b>   {{$client->address}}</div>
+            <div class="row col-12"><b>Comentario de envio</b>   <label class="red">{{$order->description_send}}</label></div>
         </div>
         <div class="section">
             <div class="title">Datos del trabajo</div>
@@ -109,15 +111,15 @@
             <div class="title">Resumen del pago</div>
             <div class="row" >
                 <div class="col-6">
-                    <b>Precio diseño </b> {{number_format($order->price_design)}}
+                    <b>Precio diseño </b> ${{number_format($order->price_design)}}
                 </div>
                 <div class="col-6">
-                    <b>Seña del trabajo </b> {{number_format($order->trace)}}
+                    <b>Seña del trabajo </b> ${{number_format($order->trace)}}
                 </div>
             </div>
             <div class="row" >
                 <div class="col-6">
-                    <b>Precio envio </b> {{number_format($order->price_send)}}
+                    <b>Precio envio </b> ${{number_format($order->price_send)}}
                 </div>
                 <div class="col-6">
                     <b>Método de pago </b> {{$order->method_payment}}
@@ -125,18 +127,18 @@
             </div>
             <div class="row" >
                 <div class="col-6">
-                    <b>Precio producto </b> {{number_format($order->price_flyer)}}
+                    <b>Precio producto </b> ${{number_format($order->price_flyer)}}
                 </div>
                 <div class="col-6">
-                    <b>Total </b> {{number_format($order->price_design + $order->price_send + $order->price_flyer)}}
+                    <b>Total </b> ${{number_format($order->price_design + $order->price_send + $order->price_flyer)}}
                 </div>
             </div>        
             <div class="row" >
                 <div class="col-6">
-                    <b>Abonos</b> {{number_format($abonos)}}
+                    <b>Pago</b> ${{number_format($abonos)}}
                 </div>
                 <div class="col-6">
-                    <b>Deuda</b> {{number_format($order->price_design + $order->price_send + $order->price_flyer - $order->trace - $abonos)}}
+                    <b>Deuda</b> ${{number_format($order->price_design + $order->price_send + $order->price_flyer - $order->trace - $abonos)}}
                 </div>
             </div>
             </div>

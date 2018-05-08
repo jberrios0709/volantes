@@ -64,12 +64,14 @@
                             <td>{{number_format($order->quantity)}}</td>
                             @if($order->abono)
                             <td>{{number_format($order->abono->mount)}}</td>
-                            <td>Abono</td>
+                            <td>Pago</td>
+                            <td>{{$order->abono->method_payment}}</td>
                             @else
                             <td>{{number_format($order->trace)}}</td>
                             <td>Seña</td>
-                            @endif
                             <td>{{$order->method_payment}}</td>
+                            @endif
+                            
                         </tr>
                         @endforeach
                     </table>
